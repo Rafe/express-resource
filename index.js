@@ -35,7 +35,7 @@ var orderedActions = [
  * Expose `Resource`.
  */
 
-module.exports = Resource;
+exports.Resource = Resource;
 
 /**
  * Initialize a new `Resource` with the given `name` and `actions`.
@@ -89,7 +89,7 @@ Resource.prototype.load = function(fn){
       req[id] = obj;
       next();
     };
-    
+
     // Maintain backward compatibility
     if (2 == fn.length) {
       fn(req.params[id], callback);
@@ -257,7 +257,8 @@ methods.concat(['del', 'all']).forEach(function(method){
  * @api public
  */
 
-app.resource = function(name, actions, opts){
+
+var resource = function(name, actions, opts){
   var options = actions || {};
   if ('object' == typeof name) actions = name, name = null;
   if (options.id) actions.id = options.id;
@@ -267,3 +268,8 @@ app.resource = function(name, actions, opts){
   var res = this.resources[name] = new Resource(name, actions, this);
   return res;
 };
+
+module.exports = function(app){
+  app.resource = resource;
+}
+
